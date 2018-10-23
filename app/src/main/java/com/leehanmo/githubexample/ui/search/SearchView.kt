@@ -6,11 +6,13 @@ import com.leehanmo.githubexample.model.UserInfo
 
 interface SearchView : BaseView {
 
-    fun seachUserInfo(userInfo: UserInfo)
+    fun showUserInfo(userInfo: UserInfo)
 
     fun showError(error:String)
 
-    fun showError(@StringRes errorResId : Int)
+    fun showError(@StringRes errorResId : Int) {
+        showError(getContext().getString(errorResId))
+    }
 
     fun showLoading()
 
