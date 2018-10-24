@@ -1,19 +1,15 @@
 package com.leehanmo.githubexample.base
 
-import com.leehanmo.githubexample.injection.component.DaggerPresenterInjector
-import com.leehanmo.githubexample.injection.component.PresenterInjector
+import com.leehanmo.githubexample.injection.component.DaggerRepoComponent
+import com.leehanmo.githubexample.injection.component.DaggerSearchComponent
 import com.leehanmo.githubexample.injection.module.ContextModule
 import com.leehanmo.githubexample.injection.module.NetworkModule
+import com.leehanmo.githubexample.ui.repo.RepoPresenter
 import com.leehanmo.githubexample.ui.search.SearchPresenter
 
 
 abstract class BasePresenter<out V : BaseView>(protected val view: V) {
 
-    private val injector : PresenterInjector = DaggerPresenterInjector.builder()
-            .baseView(view)
-            .contextModule(ContextModule)
-            .networkModule(NetworkModule)
-            .build()
 
     init {
         inject()
@@ -25,7 +21,26 @@ abstract class BasePresenter<out V : BaseView>(protected val view: V) {
 
     private fun inject() {
         when(this) {
-            is SearchPresenter -> injector.inject(this)
+            is SearchPresenter -> {
+                DaggerSearchComponent.builder()
+                        .baseView(view)
+                        .contextModule(ContextModule)
+                        .networkModule(NetworkModule)
+                        .build()
+                        .inject(this)
+
+                
+            }
+
+            is RepoPresenter -> {
+                DaggerRepoComponent.builder()
+                        .baseView(view)
+                        .contextModule(ContextModule)
+                        .networkModule(NetworkModule)
+                        .build()
+                        .inject(this)
+            }
         }
+
     }
 }

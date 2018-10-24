@@ -10,12 +10,12 @@ import dagger.Provides
 object ContextModule {
 
     @Provides
-    internal fun provideContext(baseView: BaseView) : Context {
+    fun provideContext(baseView: BaseView) : Context {
         return baseView.getContext()
     }
 
     @Provides
-    internal fun provideApplication(context: Context) : Application {
+    fun provideApplication(context: Context) : Application {
         return context.applicationContext as Application
     }
 

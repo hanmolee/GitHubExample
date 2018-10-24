@@ -1,4 +1,4 @@
-package com.leehanmo.githubexample.ui.search
+package com.leehanmo.githubexample.ui.repo
 
 import android.util.Log
 import com.leehanmo.githubexample.R
@@ -9,45 +9,36 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchPresenter(searchView: SearchView) : BasePresenter<SearchView>(searchView) {
+class RepoPresenter(repoView: RepoView) : BasePresenter<RepoView>(repoView) {
 
     @Inject
     lateinit var apiService: ApiService
 
     val compositeDisposable : CompositeDisposable by lazy { CompositeDisposable() }
 
-    private var userName : String? = null
-
     override fun onViewCreated() {
         super.onViewCreated()
-        view.hideLoading()
+        view.showRefreshing()
+        loadRepo()
     }
 
-    fun searchUserInfo(userName : String) {
-        view.showLoading()
-        apiService.getUserInfo(userName)
+    fun loadRepo() {
+        apiService.getRepo(view.getUserName())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doOnTerminate { view.hideLoading() }
                 .subscribe(
-                        { userInfo ->
-                            userInfo?.run { view.showUserInfo(userInfo) }
-                                    ?: kotlin.run { view.showNotResult() }
+                        { repoList ->
+                            Log.e("haha", repoList.toString())
+                            repoList?.run { view.updateRepo(repoList) }
+                                    ?: kotlin.run {  }
+                            view.hideRefreshing()
                         }, { view.showError(R.string.error) }
                 )
                 .apply { compositeDisposable.add(this) }
-
-    }
-
-    fun saveUserName(userName: String) {
-        this.userName = userName
-    }
-
-    fun getUserName() : String? {
-        return userName
     }
 
     override fun onViewDestroyed() {
         compositeDisposable.clear()
+        super.onViewDestroyed()
     }
 }
