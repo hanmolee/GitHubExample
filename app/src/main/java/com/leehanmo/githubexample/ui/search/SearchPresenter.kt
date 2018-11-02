@@ -1,53 +1,45 @@
 package com.leehanmo.githubexample.ui.search
 
-import android.util.Log
-import com.leehanmo.githubexample.R
-import com.leehanmo.githubexample.base.BasePresenter
-import com.leehanmo.githubexample.network.ApiService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.leehanmo.githubexample.injection.annotation.ActivityScope
+import com.leehanmo.githubexample.network.repository.SearchRepository
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchPresenter(searchView: SearchView) : BasePresenter<SearchView>(searchView) {
-
-    @Inject
-    lateinit var apiService: ApiService
+@ActivityScope
+class SearchPresenter @Inject constructor(val searchRepository: SearchRepository) : SearchContract.Presenter {
 
     val compositeDisposable : CompositeDisposable by lazy { CompositeDisposable() }
 
+    private var searchView : SearchContract.View? = null
+
     private var userName : String? = null
 
-    override fun onViewCreated() {
-        super.onViewCreated()
-        view.hideLoading()
+    override fun takeView(view: SearchContract.View) {
+        searchView = view
     }
 
-    fun searchUserInfo(userName : String) {
-        view.showLoading()
-        apiService.getUserInfo(userName)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .doOnTerminate { view.hideLoading() }
+
+    override fun searchUserInfo(userName: String) {
+        searchRepository.getUserInfo(userName)
+                .doOnError { searchView?.hideLoading() }
+                .doOnSuccess { searchView?.hideLoading() }
                 .subscribe(
-                        { userInfo ->
-                            userInfo?.run { view.showUserInfo(userInfo) }
-                                    ?: kotlin.run { view.showNotResult() }
-                        }, { view.showError(R.string.error) }
-                )
-                .apply { compositeDisposable.add(this) }
-
+                        {data -> searchView?.showUserInfo(data)},
+                        {  }
+                ).apply { compositeDisposable.add(this) }
     }
 
-    fun saveUserName(userName: String) {
+    override fun saveUserName(userName: String) {
         this.userName = userName
     }
 
-    fun getUserName() : String? {
+    override fun getUserName() : String? {
         return userName
     }
 
-    override fun onViewDestroyed() {
+    override fun dropView() {
         compositeDisposable.clear()
+        searchView = null
     }
+
 }
