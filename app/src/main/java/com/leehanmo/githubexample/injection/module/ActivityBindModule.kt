@@ -13,4 +13,8 @@ abstract class ActivityBindModule {
     @ContributesAndroidInjector(modules = [SearchActivityModule::class])
     abstract fun searchActivity() : SearchActivity
 
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [RepoActivityModule::class])
+    abstract fun repoActivity() : RepoActivity
 }
