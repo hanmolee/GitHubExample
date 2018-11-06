@@ -2,7 +2,6 @@ package com.leehanmo.githubexample.ui.search
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.bumptech.glide.Glide
 import com.jakewharton.rxbinding2.view.clicks
@@ -10,14 +9,14 @@ import com.leehanmo.githubexample.R
 import com.leehanmo.githubexample.base.BaseActivity
 import com.leehanmo.githubexample.injection.annotation.ActivityScope
 import com.leehanmo.githubexample.model.UserInfo
-import dagger.android.AndroidInjection
+import com.leehanmo.githubexample.ui.repo.RepoActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @ActivityScope
-class SearchActivity @Inject constructor() : BaseActivity(), SearchContract.View {
+class SearchActivity : BaseActivity(), SearchContract.View {
 
     @Inject
     lateinit var presenter: SearchPresenter
@@ -65,8 +64,8 @@ class SearchActivity @Inject constructor() : BaseActivity(), SearchContract.View
     }
 
     override fun startNextActivity(userName: String) {
-        /*val nextActivity = RepoActivity.newIntent(this, userName)
-        startActivity(nextActivity)*/
+        val nextActivity = RepoActivity.newIntent(this, userName)
+        startActivity(nextActivity)
     }
 
     override fun showLoading() {
