@@ -1,6 +1,5 @@
 package com.leehanmo.githubexample.injection.module
 
-import com.leehanmo.githubexample.network.ApiService
 import com.leehanmo.githubexample.util.BASE_URL
 import dagger.Module
 import dagger.Provides

@@ -7,6 +7,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.jakewharton.rxbinding2.view.clicks
 import com.leehanmo.githubexample.R
+import com.leehanmo.githubexample.base.BaseActivity
 import com.leehanmo.githubexample.injection.annotation.ActivityScope
 import com.leehanmo.githubexample.model.UserInfo
 import dagger.android.AndroidInjection
@@ -16,13 +17,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @ActivityScope
-class SearchActivity @Inject constructor() : AppCompatActivity(), SearchContract.View {
+class SearchActivity @Inject constructor() : BaseActivity(), SearchContract.View {
 
     @Inject
     lateinit var presenter: SearchPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
