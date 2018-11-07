@@ -14,10 +14,6 @@ interface SearchContract {
 
         fun showUserInfo(userInfo: UserInfo)
 
-        fun showLoading()
-
-        fun hideLoading()
-
         fun showNotResult()
 
         fun startNextActivity(userName : String)

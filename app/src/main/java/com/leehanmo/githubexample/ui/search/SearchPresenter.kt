@@ -6,7 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @ActivityScope
-class SearchPresenter @Inject constructor(val searchRepository: SearchRepository) : SearchContract.Presenter {
+class SearchPresenter @Inject constructor(private val searchRepository: SearchRepository) : SearchContract.Presenter {
 
     val compositeDisposable : CompositeDisposable by lazy { CompositeDisposable() }
 
@@ -20,6 +20,7 @@ class SearchPresenter @Inject constructor(val searchRepository: SearchRepository
 
 
     override fun searchUserInfo(userName: String) {
+        searchView?.showLoading()
         searchRepository.getUserInfo(userName)
                 .doOnError { searchView?.hideLoading() }
                 .doOnSuccess { searchView?.hideLoading() }

@@ -4,4 +4,6 @@ import android.content.Context
 
 interface BaseView {
 
+    fun showLoading()
+    fun hideLoading()
 }
