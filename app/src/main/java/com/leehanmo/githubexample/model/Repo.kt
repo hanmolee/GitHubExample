@@ -5,5 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class Repo(
         val name : String?,
         val stargazers_count : Int?,
-        val description : String?
+        val description : String?,
+        val language : String?
 )

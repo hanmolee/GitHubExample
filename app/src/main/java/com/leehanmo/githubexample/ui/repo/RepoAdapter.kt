@@ -1,6 +1,7 @@
 package com.leehanmo.githubexample.ui.repo
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,8 @@ import kotlinx.android.synthetic.main.item_repo.view.*
 
 class RepoAdapter : RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
 
-    private var repoList : List<Repo> = listOf()
+    private var repoList : MutableList<Repo> = mutableListOf()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_repo, parent, false)
@@ -18,6 +20,7 @@ class RepoAdapter : RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
     }
 
     override fun getItemCount(): Int {
+        Log.e("hanmolee size", "${repoList.size}")
         return repoList.size
     }
 
@@ -25,8 +28,8 @@ class RepoAdapter : RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
         holder.onBind(repoList[position])
     }
 
-    fun updateRepo(repoList : List<Repo>) {
-        this.repoList = repoList
+    fun updateRepo(repoList : MutableList<Repo>) {
+        this.repoList.addAll(repoList)
         notifyDataSetChanged()
     }
 
@@ -34,9 +37,10 @@ class RepoAdapter : RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
 
         fun onBind(repo: Repo) {
             view.run {
-                repoNameText.text = repo.name
-                repoDescriptionText.text = repo.description
+                repoName.text = repo.name
+                repoDescription.text = repo.description
                 repoStarText.text = repo.stargazers_count.toString()
+                repoLanguage.text = repo.language
             }
         }
     }

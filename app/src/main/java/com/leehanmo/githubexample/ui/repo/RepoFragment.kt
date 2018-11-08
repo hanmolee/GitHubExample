@@ -2,7 +2,6 @@ package com.leehanmo.githubexample.ui.repo
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,8 @@ import com.leehanmo.githubexample.model.Repo
 import com.leehanmo.githubexample.util.USER_NAME
 import kotlinx.android.synthetic.main.fragment_repo.*
 import javax.inject.Inject
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 
 
 @ActivityScope
@@ -31,16 +32,29 @@ class RepoFragment @Inject constructor() : BaseFragment(), RepoContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        with(repoList) {
-            adapter = repoAdapter
-            layoutManager = LinearLayoutManager(activity)
-        }
+        setupRepoList()
 
         repoRefresh?.setOnRefreshListener { presenter.loadRepoList() }
         presenter.takeView(this)
     }
 
-    override fun updateRepoList(repoList: List<Repo>) {
+    private fun setupRepoList() {
+        with(repoList) {
+            adapter = repoAdapter
+            layoutManager = LinearLayoutManager(context)
+
+            val infiniteScrollListener = object : InfiniteScrollListener(layoutManager as LinearLayoutManager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                    presenter.updateRepoList(page)
+                }
+            }
+            addOnScrollListener(infiniteScrollListener)
+
+        }
+    }
+
+
+    override fun updateRepoList(repoList: MutableList<Repo>) {
         repoAdapter.updateRepo(repoList)
     }
 

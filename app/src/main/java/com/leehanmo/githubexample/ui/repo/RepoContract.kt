@@ -7,11 +7,12 @@ import com.leehanmo.githubexample.model.Repo
 interface RepoContract {
 
     interface View : BaseView {
-        fun updateRepoList(repoList: List<Repo>)
+        fun updateRepoList(repoList: MutableList<Repo>)
         fun getUserName() : String?
     }
 
     interface Presenter : BasePresenter<View> {
         fun loadRepoList()
+        fun updateRepoList(page: Int)
     }
 }
