@@ -20,6 +20,7 @@ class RepoActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var repoFragmentProvider: Lazy<RepoFragment>
+
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -32,11 +33,14 @@ class RepoActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun initRepoFragment() {
         var repoFragment: RepoFragment? = supportFragmentManager.findFragmentById(R.id.repoContainer) as RepoFragment?
+
         if (repoFragment == null) {
+
             val args = Bundle()
             args.putString(USER_NAME, getUserName())
             repoFragment = repoFragmentProvider.get()
             repoFragment?.arguments = args
+
             replaceFragment(R.id.repoContainer, repoFragment)
         }
     }

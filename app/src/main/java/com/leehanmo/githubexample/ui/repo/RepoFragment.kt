@@ -35,13 +35,12 @@ class RepoFragment @Inject constructor() : BaseFragment(), RepoContract.View {
             adapter = repoAdapter
             layoutManager = LinearLayoutManager(activity)
         }
-        
+
         repoRefresh?.setOnRefreshListener { presenter.loadRepoList() }
         presenter.takeView(this)
     }
 
     override fun updateRepoList(repoList: List<Repo>) {
-        Log.e("hanmolee ! ", repoList.toString())
         repoAdapter.updateRepo(repoList)
     }
 
