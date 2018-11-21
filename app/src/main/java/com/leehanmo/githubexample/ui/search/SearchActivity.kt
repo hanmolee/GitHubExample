@@ -12,6 +12,7 @@ import com.leehanmo.githubexample.model.UserInfo
 import com.leehanmo.githubexample.ui.repo.RepoActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_search.*
+import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -79,6 +80,10 @@ class SearchActivity : BaseActivity(), SearchContract.View {
     override fun showNotResult() {
         notResultText.visibility = View.VISIBLE
         userInfoForm.visibility = View.GONE
+    }
+
+    override fun showError(error: String) {
+        toast(error)
     }
 
     override fun getContext(): Context {

@@ -13,7 +13,7 @@ import com.leehanmo.githubexample.util.USER_NAME
 import kotlinx.android.synthetic.main.fragment_repo.*
 import javax.inject.Inject
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import org.jetbrains.anko.toast
 
 
 @ActivityScope
@@ -34,7 +34,9 @@ class RepoFragment @Inject constructor() : BaseFragment(), RepoContract.View {
 
         setupRepoList()
 
-        repoRefresh?.setOnRefreshListener { presenter.loadRepoList() }
+        repoRefresh?.setOnRefreshListener {
+            presenter.loadRepoList()
+        }
         presenter.takeView(this)
     }
 
@@ -49,10 +51,12 @@ class RepoFragment @Inject constructor() : BaseFragment(), RepoContract.View {
                 }
             }
             addOnScrollListener(infiniteScrollListener)
-
         }
     }
 
+    override fun loadRepoList(repoList: MutableList<Repo>) {
+        repoAdapter.refreshRepo(repoList)
+    }
 
     override fun updateRepoList(repoList: MutableList<Repo>) {
         repoAdapter.updateRepo(repoList)
@@ -68,6 +72,10 @@ class RepoFragment @Inject constructor() : BaseFragment(), RepoContract.View {
 
     override fun hideLoading() {
         repoRefresh?.isRefreshing = false
+    }
+
+    override fun showError(error: String) {
+        context?.toast(error)
     }
 
     override fun onDestroy() {

@@ -27,7 +27,7 @@ class RepoPresenter @Inject constructor(private val repoRepository: RepoReposito
                             { repoList ->
                                 repoList?.run { repoView?.updateRepoList(this) }
                             },
-                            {}
+                            { repoView?.showError(it.toString()) }
                     ).apply { compositeDisposable.add(this) }
         }
     }
@@ -41,9 +41,9 @@ class RepoPresenter @Inject constructor(private val repoRepository: RepoReposito
                     .doOnError { repoView?.hideLoading() }
                     .subscribe(
                             { repoList ->
-                                repoList?.run { repoView?.updateRepoList(this) }
+                                repoList?.run { repoView?.loadRepoList(this) }
                             },
-                            {}
+                            { repoView?.showError(it.toString()) }
                     ).apply { compositeDisposable.add(this) }
         }
     }

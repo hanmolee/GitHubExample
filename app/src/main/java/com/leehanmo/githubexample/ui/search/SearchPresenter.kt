@@ -26,7 +26,7 @@ class SearchPresenter @Inject constructor(private val searchRepository: SearchRe
                 .doOnSuccess { searchView?.hideLoading() }
                 .subscribe(
                         {data -> searchView?.showUserInfo(data)},
-                        {  }
+                        { searchView?.showError(it.toString()) }
                 ).apply { compositeDisposable.add(this) }
     }
 

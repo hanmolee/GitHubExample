@@ -33,6 +33,12 @@ class RepoAdapter : RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun refreshRepo(repoList : MutableList<Repo>) {
+        this.repoList.clear()
+        this.repoList.addAll(repoList)
+        notifyDataSetChanged()
+    }
+
     inner class RepoViewHolder(private val view : View) : RecyclerView.ViewHolder(view) {
 
         fun onBind(repo: Repo) {

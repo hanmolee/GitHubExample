@@ -9,6 +9,7 @@ interface RepoContract {
     interface View : BaseView {
         fun updateRepoList(repoList: MutableList<Repo>)
         fun getUserName() : String?
+        fun loadRepoList(repoList: MutableList<Repo>)
     }
 
     interface Presenter : BasePresenter<View> {
