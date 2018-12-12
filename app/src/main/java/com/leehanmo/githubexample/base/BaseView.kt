@@ -1,16 +1,10 @@
 package com.leehanmo.githubexample.base
 
 import android.content.Context
-import android.support.annotation.StringRes
 
 interface BaseView {
 
-    fun getContext() : Context
-
+    fun showLoading()
+    fun hideLoading()
     fun showError(error : String)
-
-    fun showError(@StringRes errorResId : Int) {
-        this.showError(getContext().getString(errorResId))
-    }
-
 }

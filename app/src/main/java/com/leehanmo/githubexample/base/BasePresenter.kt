@@ -1,46 +1,17 @@
 package com.leehanmo.githubexample.base
 
-import com.leehanmo.githubexample.injection.component.DaggerRepoComponent
-import com.leehanmo.githubexample.injection.component.DaggerSearchComponent
-import com.leehanmo.githubexample.injection.module.ContextModule
-import com.leehanmo.githubexample.injection.module.NetworkModule
-import com.leehanmo.githubexample.ui.repo.RepoPresenter
-import com.leehanmo.githubexample.ui.search.SearchPresenter
+interface BasePresenter<T> {
 
+    /**
+     * Binds presenter with a view when resumed. The Presenter will perform initialization here.
+     *
+     * @param view the view associated with this presenter
+     */
+    fun takeView(view: T)
 
-abstract class BasePresenter<out V : BaseView>(protected val view: V) {
+    /**
+     * Drops the reference to the view when destroyed
+     */
+    fun dropView()
 
-
-    init {
-        inject()
-    }
-
-    open fun onViewCreated() {}
-
-    open fun onViewDestroyed() {}
-
-    private fun inject() {
-        when(this) {
-            is SearchPresenter -> {
-                DaggerSearchComponent.builder()
-                        .baseView(view)
-                        .contextModule(ContextModule)
-                        .networkModule(NetworkModule)
-                        .build()
-                        .inject(this)
-
-                
-            }
-
-            is RepoPresenter -> {
-                DaggerRepoComponent.builder()
-                        .baseView(view)
-                        .contextModule(ContextModule)
-                        .networkModule(NetworkModule)
-                        .build()
-                        .inject(this)
-            }
-        }
-
-    }
 }

@@ -5,4 +5,7 @@
     <string name="search">검색</string>
     <string name="profile">프로필</string>
     <string name="notResult">결과 없음</string>
+    <string name="repoName">Name</string>
+    <string name="repoDescription">Description</string>
+    <string name="language">Language</string>
 </resources>

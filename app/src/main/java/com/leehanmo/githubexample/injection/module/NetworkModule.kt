@@ -1,6 +1,5 @@
 package com.leehanmo.githubexample.injection.module
 
-import com.leehanmo.githubexample.network.ApiService
 import com.leehanmo.githubexample.util.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -8,16 +7,15 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-object NetworkModule {
+class NetworkModule {
 
     @Provides
-    internal fun provideApiService(retrofit: Retrofit) : ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
-
-    @Provides
+    @Singleton
+    @Named("retrofit")
     internal fun provideRetrofitInterface() : Retrofit {
         return Retrofit.Builder()
                 .baseUrl(BASE_URL)

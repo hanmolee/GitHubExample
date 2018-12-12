@@ -1,21 +1,21 @@
 package com.leehanmo.githubexample.base
 
-import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import dagger.android.AndroidInjection
 
-abstract class BaseActivity<P : BasePresenter<BaseView>> : BaseView, AppCompatActivity() {
-
-    protected lateinit var presenter : P
+abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        presenter = instantiatePresenter()
     }
 
-    protected abstract fun instantiatePresenter(): P
-
-    override fun getContext(): Context {
-        return this@BaseActivity
+    open fun replaceFragment(frameId : Int, fragment: Fragment) {
+        supportFragmentManager
+                .beginTransaction()
+                .add(frameId, fragment, fragment::javaClass.name)
+                .commitAllowingStateLoss()
     }
 }

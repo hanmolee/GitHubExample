@@ -1,44 +1,56 @@
 package com.leehanmo.githubexample.ui.repo
 
-import android.util.Log
-import com.leehanmo.githubexample.R
-import com.leehanmo.githubexample.base.BasePresenter
-import com.leehanmo.githubexample.network.ApiService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.leehanmo.githubexample.injection.annotation.ActivityScope
+import com.leehanmo.githubexample.network.repository.RepoRepository
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class RepoPresenter(repoView: RepoView) : BasePresenter<RepoView>(repoView) {
+@ActivityScope
+class RepoPresenter @Inject constructor(private val repoRepository: RepoRepository) : RepoContract.Presenter {
 
-    @Inject
-    lateinit var apiService: ApiService
-
+    private var repoView : RepoContract.View? = null
     val compositeDisposable : CompositeDisposable by lazy { CompositeDisposable() }
+    var loadPage = 1
 
-    override fun onViewCreated() {
-        super.onViewCreated()
-        view.showRefreshing()
-        loadRepo()
+    override fun takeView(view: RepoContract.View) {
+        repoView = view
+        repoView?.showLoading()
+        loadRepoList()
     }
 
-    fun loadRepo() {
-        apiService.getRepo(view.getUserName())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        { repoList ->
-                            Log.e("haha", repoList.toString())
-                            repoList?.run { view.updateRepo(repoList) }
-                                    ?: kotlin.run {  }
-                            view.hideRefreshing()
-                        }, { view.showError(R.string.error) }
-                )
-                .apply { compositeDisposable.add(this) }
+    override fun updateRepoList(page: Int) {
+        repoView?.getUserName()?.run {
+            repoRepository.getRepoList(this, page)
+                    .doOnSuccess { repoView?.hideLoading() }
+                    .doOnError { repoView?.hideLoading() }
+                    .subscribe(
+                            { repoList ->
+                                repoList?.run { repoView?.updateRepoList(this) }
+                            },
+                            { repoView?.showError(it.toString()) }
+                    ).apply { compositeDisposable.add(this) }
+        }
     }
 
-    override fun onViewDestroyed() {
+
+
+    override fun loadRepoList() {
+        repoView?.getUserName()?.run {
+            repoRepository.getRepoList(this, loadPage)
+                    .doOnSuccess { repoView?.hideLoading() }
+                    .doOnError { repoView?.hideLoading() }
+                    .subscribe(
+                            { repoList ->
+                                repoList?.run { repoView?.loadRepoList(this) }
+                            },
+                            { repoView?.showError(it.toString()) }
+                    ).apply { compositeDisposable.add(this) }
+        }
+    }
+
+    override fun dropView() {
         compositeDisposable.clear()
-        super.onViewDestroyed()
+        repoView = null
     }
+
 }
